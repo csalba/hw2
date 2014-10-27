@@ -6,8 +6,17 @@ class MoviesController < ApplicationController
     # will render app/views/movies/show.<extension> by default
   end
 
-  def index
-    @movies = Movie.all
+  def index	
+		
+		@hilite = 'hilite'
+    columns = {'title'=>'title', 'release_date'=>'release_date'}
+		if params[:sortby].nil?
+			@movies=Movie.all
+    elsif columns.has_key?(params[:sortby])
+      @sortby = columns[params[:sortby]]
+      @movies = Movie.order(@sortby)
+   
+    end
   end
 
   def new
