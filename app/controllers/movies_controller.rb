@@ -7,17 +7,35 @@ class MoviesController < ApplicationController
   end
 
   def index	
-		
-		@hilite = 'hilite'
-    columns = {'title'=>'title', 'release_date'=>'release_date'}
-		if params[:sortby].nil?
-			@movies=Movie.all
-    elsif columns.has_key?(params[:sortby])
-      @sortby = columns[params[:sortby]]
-      @movies = Movie.order(@sortby)
-   
+    if params[:commit] == 'Refresh'
+      session[:ratings] = params[:ratings]
+    elsif session[:ratings] != params[:ratings]
+      redirect = true
+      params[:ratings] = session[:ratings]
     end
-  end
+
+    if params[:sortby]
+      session[:sortby] = params[:sortby]
+    elsif session[:sortby]
+      redirect = true
+      params[:sortby] = session[:sortby]
+    end
+    
+    @ratings, @sortby = session[:ratings], session[:sortby]
+    if redirect
+      redirect_to movies_path({:sortby=>@sortby, :ratings=>@ratings})
+    elsif
+      columns = {'title'=>'title', 'release_date'=>'release_date'}
+      if columns.has_key?(@sortby)
+        query = Movie.order(columns[@sortby])
+      else
+        @sortby = nil
+        query = Movie
+      end
+      @movies = @ratings.nil? ? query.all : query.find_all_by_rating(@ratings.map { |r| r[0] })
+      @all_ratings = Movie.ratings
+    end
+ end
 
   def new
     # default: render 'new' template
