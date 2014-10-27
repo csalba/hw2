@@ -9,10 +9,11 @@
   = submit_tag 'Refresh', {:id=>'ratings_submit'}
 
 
+
 %table#movies
   %thead
     %tr
-      %th{:class=>@sortby=='title' ? 'hilite':''}
+      %th{:class=>@sortby=='title' ? 'hilite': ''}
         =link_to "Movie Title", movies_path({:sortby=>'title', :ratings=>@ratings}), :id=>"title_header"
       %th Rating
       %th{:class=>@sortby=='release_date' ? 'hilite':''}
