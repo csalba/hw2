@@ -32,11 +32,9 @@ class MoviesController < ApplicationController
         @sortby = nil
         query = Movie
       end
-      
       @movies = @ratings.nil? ? query.all : query.find_all_by_rating(@ratings.map { |r| r[0] })
       @all_ratings = Movie.ratings
     end
-
  end
 
   def new
